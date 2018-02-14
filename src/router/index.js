@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import HelloWorld from '@/components/HelloWorld'
 import PodcastItem from '@/components/Podcast'
 import PodcastsList from '@/components/Podcasts'
 import Producer from "@/components/Producer"
@@ -28,10 +27,5 @@ export default new Router({
       component: Producer,
       props:true
     }
-    // ,{
-    //   path: '/',
-    //   name: 'HelloWorld',
-    //   component: HelloWorld
-    // }
   ]
 })

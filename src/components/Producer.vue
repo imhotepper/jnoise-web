@@ -20,55 +20,47 @@
 <script>
 export default {
   name: "Producer",
-   props: ["id"],
+  props: ["id"],
   data() {
     return {
-         totalPages:0,
-         currentPage:0,
-      shows: [],
-      msg: "Welcome to jnoise"
+      totalPages: 0,
+      currentPage: 0,
+      shows: []
     };
   },
   methods: {
-      next(){
-         if (!( this.currentPage +1  < this.totalPages) )return;
-          this.currentPage++;
-           this.loadShows();
-         
-      },
-      prev(){
-          if (this.currentPage <= 0 )return;
-         
-          this.currentPage--;
-          this.loadShows();
-          console.log("prev page after: ", this.currentPage);
-          
-      },
-      loadShows(){
+    next() {
+      if (!(this.currentPage + 1 < this.totalPages)) return;
+      this.currentPage++;
+      this.loadShows();
+    },
+    prev() {
+      if (this.currentPage <= 0) return;
 
-
-    this.axios.get(`/producers/${this.id}/shows?page=${this.currentPage}`)
-    .then((resp) => {
-                    let data = resp.data;
-                    this.currentPage = data.number;
-                    this.totalPages = data.totalPages;
-                    this.shows = data.content;
-        })
-
-            
-      }
+      this.currentPage--;
+      this.loadShows();
+    },
+    loadShows() {
+      this.axios
+        .get(`/producers/${this.id}/shows?page=${this.currentPage}`)
+        .then(resp => {
+          let data = resp.data;
+          this.currentPage = data.number;
+          this.totalPages = data.totalPages;
+          this.shows = data.content;
+        }).catch((err)=>console.log("ERROR:", err));
+    }
   },
   created: function() {
     this.loadShows();
-
   }
 };
 </script>
 
 <style scoped>
-    a{
-        text-decoration: none
-    }
+a {
+  text-decoration: none;
+}
 </style>
 
 

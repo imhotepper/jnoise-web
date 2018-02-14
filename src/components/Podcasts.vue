@@ -16,83 +16,78 @@
           </div>
       </section>
       <section>
-          <button :disabled="currentPage <= 0"  @click="prev">prev</button>
-          <button :disabled="!(currentPage+1 < totalPages)" @click="next">Next</button>
+          <button :disabled="currentPage <= 0"  @click="prev"> << </button>
+          {{currentPage+1}} of {{totalPages}}
+          <button :disabled="!(currentPage+1 < totalPages)" @click="next"> >> </button>
       </section>
   </div>
 </template>
 
 
 <script>
-
 export default {
   name: "Podcasts",
   data() {
     return {
-        loading:false,
-         totalPages:0,
-         currentPage:0,
-         q:'',
-      shows: [],
-      msg: "Welcome to jnoise"
+      loading: false,
+      totalPages: 0,
+      currentPage: 0,
+      q: "",
+      shows: []
     };
   },
   methods: {
-      next(){
-         if (!( this.currentPage +1  < this.totalPages) )return;
-          this.currentPage++;
-           this.loadShows();
-         
-      },
-      prev(){
-          if (this.currentPage <= 0 )return;
-         
-          this.currentPage--;
-          this.loadShows();
-          console.log("prev page after: ", this.currentPage);
-          
-      },
-      loadShows(){
-
-this.loading = true;
-    this.axios.get(`/showslist?page=${this.currentPage}&q=${this.q}`)
-    .then((resp) => {
-                    let data = resp.data;
-                    this.currentPage = data.number;
-                    this.totalPages = data.totalPages;
-                    this.shows = data.content;
-                    this.loading = false;
-        }).catch((err)=>{
-            this.loading = false;
+    next() {
+      if (!(this.currentPage + 1 < this.totalPages)) return;
+      this.currentPage++;
+      this.loadShows();
+    },
+    prev() {
+      if (this.currentPage <= 0) return;
+      this.currentPage--;
+      this.loadShows();
+    },
+    loadShows() {
+      this.loading = true;
+      this.axios
+        .get(`/showslist?page=${this.currentPage}&q=${this.q}`)
+        .then(resp => {
+          let data = resp.data;
+          this.currentPage = data.number;
+          this.totalPages = data.totalPages;
+          this.shows = data.content;
+          this.loading = false;
         })
-
-            
-      },
-      filterShows(ev){
-          console.log("filtering on: ", this.q)
-          this.q =ev.target.value;
-          this.loadShows();
-      },
-      clearFilter(ev){ev.target.value="";this.filterShows(ev);}
+        .catch(err => {
+          this.loading = false;
+          console.log("ERROR:", err);
+        });
+    },
+    filterShows(ev) {
+      this.q = ev.target.value;
+      this.loadShows();
+    },
+    clearFilter(ev) {
+      ev.target.value = "";
+      this.filterShows(ev);
+    }
   },
   created: function() {
     this.loadShows();
-
   }
 };
 </script>
 
 <style scoped>
-    a{
-        text-decoration: none;
-    
-    }
+a {
+  text-decoration: none;
+}
 
-    .jn-search{
-            font-size:14pt;
-            width: 300px;
-            text-align: center;
-    }
+.jn-search {
+  font-size: 14pt;
+  width: 300px;
+  text-align: center;
+}
 </style>
 
 
